@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.party.post.dao.PostMapper">
+
+    <!--검색 조건-->
+    <sql id="searchCondition">
+        <choose>
+            <!--writer가 null이 아닌 경우에만 실행-->
+            <when test="userNickname != null">
+                <!--party_writer값에 부분적으로 일치하는 것을 모두 검색-->
+                SELECT p.*
+                FROM party_post p
+                JOIN user u ON p.user_num = u.user_num
+                WHERE u.user_nickname LIKE '%'||#{userNickname}||'%'
+            </when>
+        </choose>
+    </sql>
+
+    <!-- 게시글 생성 -->
+    <insert id="insertPost" parameterType="com.project.party.post.dto.PostDto" useGeneratedKeys="true" keyProperty="postId">
+        INSERT INTO party_post
+        (user_num, title, content)
+        VALUES
+        (#{userNum}, #{title}, #{content})
+    </insert>
+
+    <!-- 게시글 목록 조회 -->
+    <select id="getList" parameterType="com.project.party.post.dto.PostDto" resultType="com.project.party.post.dto.PostDto">
+        SELECT
+        p.post_id AS postId, p.user_num AS userNum, p.title AS title, i.image_url AS imageUrl
+        FROM party_post p
+        JOIN user u ON p.user_num = u.user_num
+        LEFT JOIN party_image i ON p.post_id = i.post_id
+        <include refid="searchCondition"/>
+        ORDER BY p.post_id DESC
+    </select>
+
+    <!--게시글 & 메인 이미지 목록 조회 & 좋아요 여부-->
+    <select id="getListWithLikes" parameterType="com.project.party.post.dto.PostDto" resultType="com.project.party.post.dto.PostDto">
+        SELECT
+        p.post_id AS postId, p.user_num AS userNum, p.title AS title, i.image_url AS imageUrl,
+        (SELECT COUNT(*) FROM party_like pl WHERE pl.post_id = p.post_id AND pl.user_num = #{userNum}) AS liked
+        FROM party_post p
+        JOIN user u ON p.user_num = u.user_num
+        LEFT JOIN party_image i ON p.post_id = i.post_id
+        <include refid="searchCondition"/>
+        ORDER BY p.post_id DESC
+    </select>
+
+    <!-- 게시글 상세 조회 -->
+    <select id="getDetail" resultType="com.project.party.post.dto.PostDto">
+        SELECT
+        p.post_id AS postId, p.user_num AS userNum, p.title, p.content,
+        p.created_at AS createdAt, p.updated_at AS updatedAt, p.view_count AS viewCount,
+        u.user_nickname AS userNickname, u.user_email AS userEmail, u.user_profile AS userProfile,
+        i.image_url AS imageUrl
+        FROM party_post p
+        JOIN user u ON p.user_num = u.user_num
+        JOIN party_image i ON p.post_id = i.post_id
+        WHERE p.post_id = #{postId}
+    </select>
+
+    <!-- 게시글 수정 -->
+    <update id="updatePost">
+        UPDATE party_post
+        SET title = #{title},
+        content = #{content}
+        WHERE post_id = #{postId}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost">
+        DELETE FROM party_post WHERE post_id = #{postId}
+    </delete>
+
+    <!--조회수 증가 -->
+    <update id = "addViewCount" parameterType="int">
+        UPDATE party_post
+        SET view_count = view_count + 1
+        WHERE post_id = #{postId}
+    </update>
+
+    <!--나의 글 조회-->
+    <select id="getMyList" resultType="com.project.party.post.dto.PostDto">
+        SELECT
+        p.post_id AS postId, p.user_num AS userNum,
+        p.title AS title, i.image_url AS imageUrl
+        FROM party_post p
+        JOIN user u ON p.user_num = u.user_num
+        LEFT JOIN party_image i ON p.post_id = i.post_id
+        WHERE p.user_num = #{userNum}
+        ORDER BY p.post_id DESC
+    </select>
+
+    <!-- 사용자 번호로 게시글 번호 조회 -->
+    <select id="getPostId" parameterType="int" resultType="int">
+        SELECT
+        p.post_id AS postId
+        FROM party_post p
+        JOIN user u ON p.user_num = u.user_num
+        WHERE p.user_num=#{userNum}
+    </select>
+
+    <!-- 전체 게시물 수 조회 -->
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM party_post p
+        JOIN user u ON p.user_num = u.user_num
+    </select>
+
+</mapper>

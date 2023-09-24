@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.party.post.dao.PostMapper">
+
+    <!-- 이미지 추가 -->
+    <insert id="insertImage" parameterType="com.project.party.post.dto.PostImageDto">
+        INSERT INTO party_image
+        (post_id, image_url)
+        VALUES
+        (#{postId}, #{imageUrl})
+    </insert>
+
+    <!-- 게시물 ID로 이미지 조회 -->
+    <select id="getImage" resultType="com.project.party.post.dto.PostImageDto">
+        SELECT
+        image_id AS imageId, post_id AS postId, image_url AS imageUrl
+        FROM party_image
+        WHERE post_id = #{postId}
+    </select>
+
+    <!-- 게시물 ID로 이미지 삭제 -->
+    <delete id="deleteImage">
+        DELETE FROM party_image
+        WHERE post_id = #{postId}
+    </delete>
+
+</mapper>

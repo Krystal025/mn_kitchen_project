@@ -1,0 +1,54 @@
+-- 축하파티 게시판 : 게시글
+CREATE TABLE party_post (
+    post_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_num INT,
+    title VARCHAR(100),
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    view_count INT
+)charset=utf8;
+
+-- 축하파티 게시판 : 이미지
+CREATE TABLE party_image (
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT,
+    FOREIGN KEY (post_id) REFERENCES party_post(post_id),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)charset=utf8;
+
+-- 축하파티 게시판 : 이미지
+CREATE TABLE post_image (
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT,
+    image_url VARCHAR(200)
+)charset=utf8;
+
+-- 축하파티 게시판 : 댓글
+CREATE TABLE party_comment (
+    comment_id INT PRIMARY KEY AUTO_INCREMENT, -- 댓글 번호
+    post_id INT NOT NULL, -- 게시글 번호
+    user_num INT NOT NULL, -- 댓글 작성자
+    content TEXT, -- 댓글 내용
+    deleted ENUM('yes', 'no') DEFAULT 'no', -- 댓글 삭제 여부
+    regdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 댓글 작성일
+)charset=utf8;
+
+-- 축하파티 게시판 : 좋아요
+    comment_id INT PRIMARY KEY AUTO_INCREMENT, — 댓글 번호
+    post_id INT NOT NULL, — 게시글 번호
+    user_num INT NOT NULL, — 댓글 작성자
+    content TEXT, — 댓글 내용
+    deleted ENUM('yes', 'no') DEFAULT 'no', — 댓글 삭제 여부
+    regdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP — 댓글 작성일
+)charset=utf8;
+
+— 축하파티 게시판 : 좋아요
+CREATE TABLE party_like (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_num INT,
+    post_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_num, post_id)
+)charset=utf8;
+

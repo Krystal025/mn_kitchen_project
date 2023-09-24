@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.party.likes.dao.LikesMapper">
+
+    <!-- 좋아요 추가 -->
+    <insert id="insertLike" parameterType="com.project.party.likes.dto.LikesDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO party_like
+            (post_id, user_num)
+        VALUES
+            (#{postId}, #{userNum})
+    </insert>
+
+    <!-- 좋아요 삭제 -->
+    <delete id="deleteLike" parameterType="int">
+        DELETE FROM party_like
+        WHERE post_id = #{postId} AND user_num = #{userNum}
+    </delete>
+
+    <!-- 좋아요 개수 -->
+    <select id="countLikes" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM party_like
+        WHERE post_id = #{postId}
+    </select>
+
+    <!-- 좋아요 여부 확인 -->
+    <select id="isLikedByUser" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM party_like
+        WHERE post_id = #{postId} AND user_num = #{userNum}
+    </select>
+
+    <!-- 좋아요 순위별 조회 -->
+    <select id="orderByLike" resultType="com.project.party.likes.dto.LikesDto">
+        SELECT
+            pl.post_id AS postId, COUNT(*) AS likeCount, pi.image_url AS imageUrl
+        FROM party_like pl
+        JOIN party_image pi ON pl.post_id = pi.post_id
+        GROUP BY pl.post_id   <!--게시글 번호를 기준으로 그룹화-->
+        ORDER BY likeCount DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,8 @@
+{
+  "editor.tabSize": 2,
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "main"
+  ]
+}

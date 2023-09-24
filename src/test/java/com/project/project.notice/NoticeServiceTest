@@ -1,0 +1,25 @@
+package com.project.project.notice;
+
+import com.project.notice.NoticeDto;
+import com.project.notice.NoticeService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+@SpringBootTest
+class NoticeServiceTest {
+    @Autowired
+    NoticeService noticeService;
+    @Test
+    void saveByForeach() {
+        for (int i = 1; i <= 20; i++) {
+            NoticeDto params = new NoticeDto();
+            params.setTitle(i + "번 공지목록 제목");
+            params.setContent(i + "번 게시글 내용");
+            params.setWriter("테스터" + i);
+
+            noticeService.savePost(params);
+        }
+    }
+}
