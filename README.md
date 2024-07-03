@@ -37,7 +37,7 @@
 
 ### BackEnd
 <div style="display : flex">
-    <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white" />
+    <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=OpenJDK&logoColor=white"/>
     <img src="https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=mariadb&logoColor=white"/>
     <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"/> 
     <img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white"/> 
@@ -95,7 +95,7 @@
 ## 테스트 
 ---
 - JUnit을 활용한 테스트 코드 작성
-- Postman 활용 
+- Postman을 활용하여 단위 테스트를 진행하였습니다. 
 <br/>
 
 ## 팀원 및 구현기능   
